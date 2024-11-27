@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>攻略情報一覧</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>攻略情報の一覧</h1>
+
+        <!-- 新規登録ボタン -->
+        <a href="{% url 'blogapp:game_create' %}" class="btn btn-primary mt-3">新規登録</a>
+
+        <!-- ゲーム削除フォーム -->
+        <form method="post" action="{% url 'blogapp:game_delete_bulk' %}" id="delete-form">
+            {% csrf_token %}
+            <!-- ゲームのリスト -->
+            <ul class="list-group mt-3">
+                {% for game in games %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <input type="checkbox" name="game_ids" value="{{ game.id }}" class="form-check-input"> <!-- チェックボックス -->
+                        <h5>{{ game.title }}</h5>
+                        <p>{{ game.detail }}</p>
+                        <small>作成日時: {{ game.created_at }}</small>
+                    </div>
+
+                    <!-- 個別削除ボタン（オプション） -->
+                    <form method="post" action="{% url 'blogapp:game_delete' game.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">削除</button>
+                    </form>
+                </li>
+                {% empty %}
+                <li class="list-group-item">攻略情報はまだありません。</li>
+                {% endfor %}
+            </ul>
+        </form>
+        <a href="{% url 'blogapp:index' %}" class="btn btn-primary mt-3">ホーム</a>
+    </div>
+</body>
+</html>
